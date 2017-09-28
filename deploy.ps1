@@ -27,25 +27,15 @@ configuration AllowRemoteDesktopAdminConnections
         {
            Ensure = 'Present'
            GroupName = "Remote Desktop Users"
-           Members =  @($DomainMember, "wtw_test\chetan123adm" ) 
+           MembersToInclude  =  @($DomainMember, "wtw_test\chetan123adm" ) 
            Credential = $DomainCreds
         }
     
-
-        Group GroupAdmins
-         {
-	        GroupName = "GroupAdmins"
-        	Ensure = "Present"
-	        Members = @($DomainMember, "wtw_test\chetan123adm" )
-            Credential = $DomainCreds
-         }
-
         Group Administrators
          {
         	GroupName = "Administrators"
 	        Ensure = "Present"
-	        MembersToInclude =  "GroupAdmins"
-	        DependsOn = "[Group]GroupAdmins"
+	        MembersToInclude =  @($DomainMember, "wtw_test\chetan123adm" )
             Credential = $DomainCreds
          }
         
@@ -54,5 +44,5 @@ configuration AllowRemoteDesktopAdminConnections
 $workingdir = 'C:\DSC\MOF'
 AllowRemoteDesktopAdminConnections -ConfigurationData $ConfigData -OutputPath $workingdir
 
-Start-DscConfiguration -ComputerName 'N21-BN-DVTS082D' -wait -force -verbose -path $workingdir 
+Start-DscConfiguration -ComputerName $ComputerName -wait -force -verbose -path $workingdir 
 
